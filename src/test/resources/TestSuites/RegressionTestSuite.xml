@@ -1,0 +1,25 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="RegressionTestSuite" verbose="1" parallel="tests"
+	thread-count="2">
+	<!--  <parameter name="environment" value="sauce"></parameter> -->
+
+	<test name="LogInTest-Chrome">
+		<parameter name="browser" value="chrome"></parameter>
+		<parameter name="platform" value="Windows 10"></parameter>
+		<classes>
+			<class name="com.cipa.test.LoginTest">
+			</class>
+		</classes>
+	</test>
+
+	<test name="LogInTest-Firefox">
+		<parameter name="browser" value="firefox"></parameter>
+		<parameter name="platform" value="Windows 10"></parameter>
+		<classes>
+			<class name="com.cipa.test.LoginTest">
+			</class>
+		</classes>
+	</test>
+
+</suite>
