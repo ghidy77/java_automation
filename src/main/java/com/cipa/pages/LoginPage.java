@@ -1,42 +1,36 @@
 package com.cipa.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import com.cipa.base.BasePageObject;
+import com.cipa.base.BasePage;
+import com.cipa.driver.SelDriver;
 
-public class LoginPage extends BasePageObject {
+public class LoginPage extends BasePage {
 
-	private String baseURL = "http://example.com/login";
+	@FindBy(css = ".username")
+	WebElement userInput;
+	@FindBy(css = ".password")
+	WebElement passwordInput;
+	@FindBy(id = "submit")
+	WebElement loginButton;
 
-	private By userInput = By.cssSelector(".username");
-	private By passwordInput = By.cssSelector(".password");
-	private By loginButton = By.id("submit");
-
-
-	public LoginPage(WebDriver driver) {
+	public LoginPage(SelDriver driver) {
 		super(driver);
+		PageFactory.initElements(driver, this);
+		driver.waitFor(wd -> wd.getCurrentUrl().toLowerCase().contains("login"), DEFAULT_WAIT);
+		driver.waitFor(ExpectedConditions.visibilityOf(userInput), DEFAULT_WAIT);
 	}
-
-
-	/* Open page */
-	public void goToPage() {
-		get(baseURL);
-	}
-
-
-	/* Wait for username input to be visible on the page */
-	public void waitForLoginPageToLoad() {
-		waitForVisibilityOf(userInput, 5);
-	}
-
 
 	/* Valid log in */
 	public AccountPage login(String username, String password) {
-		find(userInput).sendKeys(username);
-		find(passwordInput).sendKeys(password);
-		find(loginButton).click();
-		
+		userInput.sendKeys(username);
+		passwordInput.sendKeys(password);
+		loginButton.click();
+		driver.waitForPageToLoad();
+
 		return new AccountPage(driver);
 	}
 }

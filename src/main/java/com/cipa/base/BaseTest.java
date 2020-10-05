@@ -1,21 +1,17 @@
 package com.cipa.base;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
+import com.cipa.driver.BrowserDriverFactory;
+import com.cipa.driver.SelDriver;
+
 public class BaseTest {
 
-	protected WebDriver driver;
+	protected SelDriver driver;
 
 	@BeforeMethod(alwaysRun = true)
 	@Parameters({ "browser", "environment", "platform" })
@@ -25,10 +21,8 @@ public class BaseTest {
 		BrowserDriverFactory factory = new BrowserDriverFactory(browser);
 
 		// Starting tests locally or on the grid depending on the environment parameter
-		if (environment.equals("grid")) {
-			driver = factory.createDriverGrid();
-		} else if (environment.equals("sauce")) {
-			driver = factory.createDriverSauce(platform, testName);
+		if (environment.equals("sauce")) {
+			driver = factory.createDriverInSauceLabs(platform, testName);
 		} else {
 			driver = factory.createDriver();
 		}
@@ -41,16 +35,9 @@ public class BaseTest {
 	protected void tearDown() {
 		// Closing driver
 		System.out.println("Closing driver");
-		driver.quit();
-	}
-
-	protected void takeScreenshot(String fileName) {
-		File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-		String path = System.getProperty("user.dir") + "//test-output//screenshots//" + fileName + ".png";
-		try {
-			FileUtils.copyFile(scrFile, new File(path));
-		} catch (IOException e) {
-			e.printStackTrace();
+		if (driver != null) {
+			driver.quit();
 		}
 	}
+
 }

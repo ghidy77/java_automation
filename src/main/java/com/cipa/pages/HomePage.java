@@ -1,29 +1,26 @@
 package com.cipa.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
-import com.cipa.base.BasePageObject;
+import com.cipa.base.BasePage;
+import com.cipa.driver.SelDriver;
 
-public class HomePage extends BasePageObject {
+public class HomePage extends BasePage {
 
-	private String baseURL = "http://example.com/";
+	@FindBy(partialLinkText = "Sign In" )
+	WebElement signInButton;
 
-	private By signInButton = By.partialLinkText("Sign In");
-
-	public HomePage(WebDriver driver) {
+	public HomePage(SelDriver driver) {
 		super(driver);
+		driver.waitFor(wd-> wd.getCurrentUrl().toLowerCase().contains("homepage"), DEFAULT_WAIT);
+		PageFactory.initElements(driver, this);
 	}
-
-	/* Open page */
-	public void goToPage() {
-		get(baseURL);
-	}
-
 
 	/** Open LoginPage by clicking on Form Authentication Link */
 	public LoginPage clickLoginButton() {
-		find(signInButton).click();
+		signInButton.click();
 		return new LoginPage(driver);
 	}
 
