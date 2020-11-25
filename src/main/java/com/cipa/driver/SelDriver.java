@@ -6,6 +6,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.util.Map;
 
+import com.cipa.utils.PropertyReader;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.JavascriptExecutor;
@@ -18,13 +21,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SelDriver extends RemoteWebDriver {
 
+	private static final Logger LOG = LogManager.getLogger(SelDriver.class);
+
 	public SelDriver(URL remoteAddress, Capabilities capabilities) {
 		super(remoteAddress, capabilities);
 	}
 
 	@Override
 	public void get(String url) {
-		System.out.println("Open page: " + url);
+		LOG.info("Navigate to: " + url);
 		super.get(url);
 		waitForPageToLoad();
 	}
@@ -50,9 +55,9 @@ public class SelDriver extends RemoteWebDriver {
 		wait.until(condition);
 	}
 
-	protected void takeScreenshot(String fileName) throws IOException {
+	public void takeScreenshot(String fileName) throws IOException {
 		File scrFile = getScreenshotAs(OutputType.FILE);
-		File path = new File(System.getProperty("user.dir") + "//test-output//screenshots//" + fileName + ".png");
+		File path = new File(PropertyReader.getProperty("screenshot.dir")  + fileName);
 		Files.copy(scrFile.toPath(), path.toPath());
 	}
 
@@ -86,7 +91,7 @@ public class SelDriver extends RemoteWebDriver {
 		Double windowInnerHeight = Double.parseDouble(executeScript("return window.innerHeight").toString());
 		Double windowInnerWidth = Double.parseDouble(executeScript("return window.innerWidth").toString());
 
-		System.out.println(element.toString() + " location: " + "TOP: " + top + "  LEFT:" + left + "  BOTTOM:" + bottom
+		LOG.debug(element.toString() + " location: " + "TOP: " + top + "  LEFT:" + left + "  BOTTOM:" + bottom
 				+ "  RIGHT:" + right + "  Window Inner Height:" + windowInnerHeight + "  Window Inner Width:"
 				+ windowInnerWidth);
 		// presence in viewport is validated here

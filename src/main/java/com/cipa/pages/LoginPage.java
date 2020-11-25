@@ -5,10 +5,10 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import com.cipa.base.BasePage;
+import com.cipa.base.PageBase;
 import com.cipa.driver.SelDriver;
 
-public class LoginPage extends BasePage {
+public class LoginPage extends PageBase {
 
 	@FindBy(css = ".username")
 	WebElement userInput;

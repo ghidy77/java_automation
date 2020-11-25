@@ -3,6 +3,7 @@ package com.cipa.driver;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.cipa.utils.PropertyReader;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -15,22 +16,19 @@ public class BrowserDriverFactory {
 		this.browser = browser.toLowerCase();
 	}
 
-	public SelDriver createDriver() {
+	public SelDriver createLocalDriver() {
 
 		URL url;
 		try {
-			url = new URL("http://192.168.0.1:4444/wd/hub");
+			url = new URL(PropertyReader.getProperty("selenium.hub"));
 		} catch (MalformedURLException e) {
 			throw new IllegalStateException("Invalid URL of remote web driver");
 		}
 		// Creating driver
 		switch (browser) {
 		case "chrome":
-			System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
 			return new SelDriver(url, new ChromeOptions());
-
 		case "firefox":
-			System.setProperty("webdriver.gecko.driver", "src/main/resources/geckodriver.exe");
 			return new SelDriver(url, new FirefoxOptions());
 		default:
 			throw new IllegalStateException("Invalid Browser parameter");
@@ -41,8 +39,8 @@ public class BrowserDriverFactory {
 	/** Starting tests using sauce labs grid */
 	public SelDriver createDriverInSauceLabs(String platform, String testName) {
 		System.out.println("Starting Saucelabs");
-		String username = "USER";
-		String accessKey = "PASSWORD";
+		String username = PropertyReader.getProperty("saucelabs.user");
+		String accessKey = PropertyReader.getProperty("saucelabs.accesskey");
 		String urlSauce = "http://" + username + ":" + accessKey + "@ondemand.saucelabs.com:80/wd/hub";
 		URL url;
 		try {

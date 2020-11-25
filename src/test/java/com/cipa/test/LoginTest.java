@@ -7,11 +7,11 @@ import com.cipa.base.*;
 import com.cipa.pages.*;
 
 
-public class LoginTest extends BaseTest {
+public class LoginTest extends TestBase {
 	
 	public static final String BASE_URL = "https://www.example.org";
 
-	@Test(priority = 1)
+	@Test(description = "Valid Login test")
 	public void logInTest() {
 		
 		String username = "test_user";
